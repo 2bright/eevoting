@@ -1,6 +1,7 @@
 {
   "name": "eevoting",
   "version": "1.0.0",
+  "license": "Apache-2.0",
   "description": "A decentralized voting system using ethereum blockchain as the only backend service",
   "author": "l.wen.jie <l.wen.jie@qq.com>",
   "private": true,
