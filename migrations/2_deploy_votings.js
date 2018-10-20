@@ -1,13 +1,14 @@
-var UserRepositoryFactory = artifacts.require('UserRepositoryFactory');
-var VotingFactory = artifacts.require('VotingFactory');
+var Usergroup = artifacts.require('Usergroup');
+var Voting = artifacts.require('Voting');
 var VotingSystem = artifacts.require('VotingSystem');
 
 module.exports = function(deployer) {
-    deployer.deploy(UserRepositoryFactory);
-    deployer.link(UserRepositoryFactory, VotingSystem);
+    deployer.deploy(Usergroup);
+    deployer.link(Usergroup, VotingSystem);
+    deployer.link(Usergroup, Voting);
 
-    deployer.deploy(VotingFactory);
-    deployer.link(VotingFactory, VotingSystem);
+    deployer.deploy(Voting);
+    deployer.link(Voting, VotingSystem);
 
     deployer.deploy(VotingSystem);
 }

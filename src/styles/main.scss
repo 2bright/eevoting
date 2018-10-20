@@ -1,0 +1,91 @@
+.main-container {
+  .head-btn-groups {
+    margin-bottom:15px;
+  }
+  .app-container {
+    min-height: 300px;
+  }
+}
+
+.link {
+  cursor: pointer;
+  text-decoration: underline;
+  color: #20a0ff;
+}
+
+.view-form {
+  .vf-item {
+    display: flex;
+
+    .vfi-name {
+      flex: 0 0 auto;
+      display: inline-block;
+      width: 130px;
+      text-align: right;
+      vertical-align: middle;
+      font-size: 14px;
+      color: rgb(72, 87, 106);
+      line-height: 22px;
+      padding: 11px 12px 11px 0;
+      box-sizing: border-box;
+    }
+
+    .vfi-value {
+      flex: 1 1 auto;
+      display: flex;
+      flex-wrap: wrap;
+      text-align: left;
+      font-size: 14px;
+      color: rgb(72, 87, 106);
+      line-height: 22px;
+      padding: 11px 12px 11px 0;
+      box-sizing: border-box;
+    }
+  }
+}
+
+.field-comment {
+  margin-left: 10px;
+  color: #606266;
+  font-size: 12px;
+
+  &.field-warning {
+    color: #e6a23c;
+  }
+}
+
+.title {
+  color: #606266;
+  font-size: 28px;
+  font-weight: bold;
+  margin: 0 0 15px 0;
+  white-space:pre-wrap;
+  word-break:break-all;
+}
+
+.paragraph {
+  color: #606266;
+  font-size: 14px;
+  margin: 0 0 15px 0;
+  text-indent: 2em;
+  line-height: 24px;
+  white-space:pre-wrap;
+  word-break:break-all;
+}
+
+/* el-* */
+.el-switch__label {
+  &.el-switch__label--left {
+    color: rgb(64,158,255)
+  }
+  &.el-switch__label--right {
+    color: rgb(19,206,102)
+  }
+}
+
+.el-message {
+  .el-message__content {
+    word-break: break-all;
+    white-space:pre-wrap;
+  }
+}

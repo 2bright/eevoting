@@ -8,14 +8,15 @@
 # install dependencies
 npm install
 
-# serve with hot reload at localhost:8080
+# serve with hot reload at 0.0.0.0:8080
 npm run dev
 
-# build for production with minification
-npm run build
+# start ganache-cli
+./ganache/start
 
-# build for production and view the bundle analyzer report
-npm run build --report
+# deploy contracts
+truffle compile && truffle migrate --reset
+
+# open browser and visit http://yourhost:8080
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).

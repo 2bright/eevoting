@@ -1,0 +1,4 @@
+#!/bin/bash
+
+accounts_path=$(dirname $0)/accounts.json
+ganache-cli -h 0.0.0.0 -p 8545 -l 8000000 -g 200000000000 -d --acctKeys $accounts_path -v
