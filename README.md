@@ -2,20 +2,23 @@
 
 > A decentralized voting system using ethereum blockchain as the only backend service
 
-## Build Setup
+## development setup
 
 ``` bash
 # install dependencies
 npm install
 
-# serve with hot reload at 0.0.0.0:8080
-npm run dev
-
 # start ganache-cli
 ./ganache/start
 
+# compile contracts
+truffle compile
+
 # deploy contracts
-truffle compile && truffle migrate --reset
+truffle deploy --reset
+
+# serve with hot reload at 0.0.0.0:8080
+npm run dev
 
 # open browser and visit http://yourhost:8080
 ```

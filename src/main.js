@@ -13,12 +13,10 @@ import '@/utils/filters'
 import App from './App'
 import router from './router'
 import store from './store'
-import ethApi from './api/eth'
 
 Vue.use(ElementUI, { locale })
 Vue.config.productionTip = false
 store.commit('onRefreshPage')
-ethApi.init()
 
 new Vue({
   el: '#app',

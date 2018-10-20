@@ -53,23 +53,13 @@ const ethApi = (() => {
       InUsergroup: 4
     },
 
-    init() {
+    request(callback) {
       if (Web3.givenProvider) {
         // Use Mist/MetaMask's provider
         this.web3 = new Web3(Web3.givenProvider)
         this.votingContract = new this.web3.eth.Contract(votingContractArtifact.abi, this.votingContractAddress, { gas: 7000000 })
-      } else {
-        console.error(this._errorNoWeb3)
-
-        Message.error({
-          message: this._errorNoWeb3,
-          duration: 0,
-          showClose: true
-        })
       }
-    },
 
-    request(callback) {
       return new Promise((resolve, reject) => {
         if (!this.web3) {
           reject(new Error(this._errorNoWeb3))
