@@ -131,8 +131,8 @@ export default {
           { validator: this.checkTitleLength, trigger: 'blur' }
         ],
         description: [
-          { max: 3072, message: '不超过3000个字符, 不超过1000个汉字', trigger: 'blur' },
-          { validator: this.checkDescriptionLength, trigger: 'blur' }
+          // { max: 3072, message: '不超过3000个字符, 不超过1000个汉字', trigger: 'blur' },
+          // { validator: this.checkDescriptionLength, trigger: 'blur' }
         ],
         options: [
           { validator: this.checkOptionsNum, trigger: 'blur' }
