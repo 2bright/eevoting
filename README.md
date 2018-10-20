@@ -1,4 +1,4 @@
-# eevoting
+# eevoting (倍易投票)
 
 > A decentralized voting system using ethereum blockchain as the only backend service
 
