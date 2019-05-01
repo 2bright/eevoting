@@ -6,6 +6,7 @@ COPY sources.list.16.04 /etc/apt/sources.list
 
 RUN apt-get update
 
+RUN apt-get install -y shadowsocks polipo
 RUN apt-get install -y git wget curl man pkg-config zip g++ zlib1g-dev unzip apt-utils software-properties-common vim
 
 RUN git config --global alias.st status
@@ -30,5 +31,7 @@ RUN npm install -g cnpm --registry=https://registry.npm.taobao.org
 RUN npm config set registry https://registry.npm.taobao.org
 RUN cnpm install -g truffle@5.0.0-beta.0
 RUN cnpm install -g ganache-cli@6.1.8
+
+COPY pip.conf /root/.pip/pip.conf
 
 WORKDIR /this_project
