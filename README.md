@@ -19,9 +19,19 @@ truffle compile
 # deploy contracts
 truffle deploy --reset
 
-# serve with hot reload at 0.0.0.0:8080
+# serve with hot reload at 0.0.0.0:8540
 npm run dev
 
-# open browser and visit http://yourhost:8080
+# open browser and visit http://yourhost:8540
 ```
 
+## setup with docker
+
+```
+cd docker
+docker-compose up -d
+docker-compose logs -f --tail 10
+
+# wait until server listening on 8540 port
+# open browser and visit http://yourhost:8540
+```
