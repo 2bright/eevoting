@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ "$1" == "start" ]; then
+    sslocal -c /etc/shadowsocks/config.json &
+    service polipo start
+elif [ "$1" == "stop" ]; then
+    service polipo stop
+    kill $(ps aux | grep 'sslocal' | grep -v grep | awk '{print $2}')
+fi

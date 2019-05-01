@@ -1,0 +1,9 @@
+{
+    "server" : "your_server_ip",
+    "server_port" : 2555,
+    "password" : "your_password",
+    "method" : "aes-256-cfb",
+    "remarks" : "",
+    "local_port":1080,
+    "timeout":600
+}

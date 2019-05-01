@@ -108,6 +108,17 @@ const routes = [
     ]
   },
   {
+    path: '/time',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '',
+        component: () => import('@/views/time')
+      }
+    ]
+  },
+  {
     path: '/404',
     component: Layout,
     hidden: true,

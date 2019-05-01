@@ -114,4 +114,12 @@ contract VotingSystem {
   {
     votings.vote(_voting_id, _option_ids, usergroups);
   }
+
+  function getCurrentTime()
+  public
+  view
+  returns(uint32 _now)
+  {
+    return uint32(now);
+  }
 }

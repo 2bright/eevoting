@@ -20,6 +20,10 @@ const ethApi = (() => {
     return mix
   }
 
+  var hexToByte32 = function(hex) {
+    return '0x' + ('0000000000000000000000000000000000000000000000000000000000000000' + hex.substring(2)).slice(-64)
+  }
+
   var random = function() {
     return Math.floor(Math.random() * (2 ** 32 - 1))
   }
@@ -36,11 +40,21 @@ const ethApi = (() => {
     return voting.eth_time < voting.start_time ? 0 : (voting.eth_time > voting.end_time ? 2 : 1)
   }
 
-  return {
-    votingContractAddress: '0xC89Ce4735882C9F0f0FE26686c53074E09B0D550',
+  var this_votingContractAddress = '0xC89Ce4735882C9F0f0FE26686c53074E09B0D550'
+  var this_web3 = null
+  var this_votingContract = null
 
-    web3: null,
-    votingContract: null,
+  if (Web3.givenProvider) {
+    // Use Mist/MetaMask's provider
+    this_web3 = new Web3(Web3.givenProvider)
+    this_votingContract = new this_web3.eth.Contract(votingContractArtifact.abi, this_votingContractAddress, { gas: 7000000 })
+  }
+
+  return {
+    votingContractAddress: this_votingContractAddress,
+
+    web3: this_web3,
+    votingContract: this_votingContract,
 
     _errorNoWeb3: '请先安装 Mist 或 MetaMask',
     _errorNoAccount: '请先用 Mist 或 MetaMask 登录以太坊',
@@ -54,12 +68,6 @@ const ethApi = (() => {
     },
 
     request(callback) {
-      if (Web3.givenProvider) {
-        // Use Mist/MetaMask's provider
-        this.web3 = new Web3(Web3.givenProvider)
-        this.votingContract = new this.web3.eth.Contract(votingContractArtifact.abi, this.votingContractAddress, { gas: 7000000 })
-      }
-
       return new Promise((resolve, reject) => {
         if (!this.web3) {
           reject(new Error(this._errorNoWeb3))
@@ -93,9 +101,15 @@ const ethApi = (() => {
       })
     },
 
+    getCurrentTime() {
+      return this.request(() => {
+        return this.votingContract.methods.getCurrentTime().call()
+      })
+    },
+
     hasUsergroupName(name) {
       return this.request(() => {
-        return this.votingContract.methods.hasUsergroupName(Web3.utils.stringToHex(name)).call()
+        return this.votingContract.methods.hasUsergroupName(hexToByte32(this.web3.utils.stringToHex(name))).call()
       })
     },
 
@@ -109,7 +123,7 @@ const ethApi = (() => {
     parseUsergroupResponse(rsp) {
       var usergroup = {
         owner: rsp._owner,
-        name: Web3.utils.hexToString(rsp._name),
+        name: this.web3.utils.hexToString(rsp._name),
         description: rsp._description,
         id: getUint32(rsp._mix, 0),
         create_time: getUint32(rsp._mix, 1),
@@ -176,7 +190,13 @@ const ethApi = (() => {
         }
 
         on = on || (v => v)
-        return on(this.votingContract.methods.createUsergroup(Web3.utils.stringToHex(data.name), data.description, members).send())
+        return on(this.votingContract.methods.createUsergroup(
+          hexToByte32(this.web3.utils.stringToHex(data.name)),
+          data.description,
+          members
+        ).send({
+          from: this.votingContract.options.from
+        }))
       })
     },
 
@@ -188,7 +208,7 @@ const ethApi = (() => {
 
     validateVotingParams(data) {
       return this.request(() => {
-        var title = Web3.utils.stringToHex(data.title)
+        var title = this.web3.utils.stringToHex(data.title)
         var param_arr = [[
           data.usergroup_id || 0,
           data.options.length,
@@ -211,7 +231,7 @@ const ethApi = (() => {
 
     publishVoting(data) {
       return this.getVotingNonce().then(nonce => {
-        var title = Web3.utils.stringToHex(data.title)
+        var title = this.web3.utils.stringToHex(data.title)
         var param_arr = [[
           data.usergroup_id || 0,
           data.options.length,
@@ -236,7 +256,7 @@ const ethApi = (() => {
         for (i = 0; i < data.options.length; i++) {
           content.opts.push({ t: data.options[i].title })
         }
-        var content_hex = Web3.utils.stringToHex(JSON.stringify(content))
+        var content_hex = this.web3.utils.stringToHex(JSON.stringify(content))
 
         var slice_size = 4 * 1024
         var slices_num = Math.ceil((content_hex.length - 2) / 2 / slice_size)
@@ -264,26 +284,30 @@ const ethApi = (() => {
             if (slice_index >= slices_num) {
               return
             }
-            this.votingContract.methods.publishVotingSlice(metas[slice_index], slices[slice_index]).send()
-              .on('transactionHash', () => {
-                publishSlice(slice_index + 1)
-              }).then(() => {
-                onSliceMined()
-              }).catch((err) => {
-                console.error('error occurs when publish slice index ' + slice_index)
-                reject(err)
-              })
-          }
-
-          this.votingContract.methods.publishVoting(metas[0], slices[0], params, title).send()
-            .on('transactionHash', () => {
-              publishSlice(1)
+            this.votingContract.methods.publishVotingSlice(
+              metas[slice_index], slices[slice_index]
+            ).send({
+              from: this.votingContract.options.from
+            }).on('transactionHash', () => {
+              publishSlice(slice_index + 1)
             }).then(() => {
               onSliceMined()
             }).catch((err) => {
-              console.error('error occurs when publish slice index 0')
+              console.error('error occurs when publish slice index ' + slice_index)
               reject(err)
             })
+          }
+
+          this.votingContract.methods.publishVoting(metas[0], slices[0], params, title).send({
+            from: this.votingContract.options.from
+          }).on('transactionHash', () => {
+            publishSlice(1)
+          }).then(() => {
+            onSliceMined()
+          }).catch((err) => {
+            console.error('error occurs when publish slice index 0')
+            reject(err)
+          })
         })
       })
     },
@@ -317,8 +341,8 @@ const ethApi = (() => {
       }
 
       var voting = {
-        owner: Web3.utils.toChecksumAddress('0x' + rsp._mixes[0].substring(26)),
-        title: Web3.utils.hexToString(rsp._title),
+        owner: this.web3.utils.toChecksumAddress('0x' + rsp._mixes[0].substring(26)),
+        title: this.web3.utils.hexToString(rsp._title),
 
         options: options,
         my_vote: my_vote,
@@ -392,7 +416,7 @@ const ethApi = (() => {
       for (i = 0; i < slices.length; i++) {
         content_hex += slices[i].substring(2)
       }
-      var content = JSON.parse(Web3.utils.hexToString(content_hex))
+      var content = JSON.parse(this.web3.utils.hexToString(content_hex))
 
       var voting = {
         description: content.desc,
@@ -451,7 +475,9 @@ const ethApi = (() => {
     vote(data, on) {
       return this.request(() => {
         on = on || (v => v)
-        return on(this.votingContract.methods.vote(data.voting_id, data.option_ids).send())
+        return on(this.votingContract.methods.vote(data.voting_id, data.option_ids).send({
+          from: this.votingContract.options.from
+        }))
       })
     }
   }

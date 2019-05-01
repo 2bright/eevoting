@@ -152,7 +152,7 @@ library Voting {
 
     p.start_time = uint32(_params[0] >> 4*32);
     p.end_time = uint32(_params[0] >> 5*32);
-    if (!(p.start_time >= now - 120)) { _error = "start time must be greater than now minus 20 minutes."; return; }
+    if (!(p.start_time >= uint32(now) - 1200)) { _error = "start time must be greater than now minus 20 minutes."; return; }
     if (!(p.end_time > p.start_time && p.end_time >= now)) { _error = "end time must be greater than now and start_time."; return; }
 
     p.allow_multi_winner = uint32(_params[1]);

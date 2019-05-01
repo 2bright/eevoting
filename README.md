@@ -7,6 +7,8 @@
 ``` bash
 # install dependencies
 npm install
+npm install -g ganache-cli
+npm install -g truffle@4.1.15
 
 # start ganache-cli
 ./ganache/start
