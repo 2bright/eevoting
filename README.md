@@ -1,7 +1,8 @@
-# eevoting (倍易投票)
+# EEVoting (倍易投票)
 
 > 倍易投票是一个把以太坊作为唯一后端服务的去中心化投票系统。
-> A decentralized voting system using ethereum blockchain as the only backend service
+
+> EEVoting is a decentralized voting system using ethereum blockchain as the only backend service
 
 ## 页面截图
 
