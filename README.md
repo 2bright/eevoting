@@ -1,6 +1,17 @@
 # eevoting (倍易投票)
 
+> 倍易投票是一个把以太坊作为唯一后端服务的去中心化投票系统。
 > A decentralized voting system using ethereum blockchain as the only backend service
+
+## 页面截图
+
+发布投票
+
+![publish](./static/page_publish.png)
+
+参与投票
+
+![voting](./static/page_voting.png)
 
 ## development setup
 
